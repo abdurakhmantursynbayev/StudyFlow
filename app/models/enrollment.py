@@ -1,7 +1,12 @@
 from app.models.base import Base
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey
 from datetime import date
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.user import User
+    from app.models.course import Course
 
 
 class Enrollment(Base):
@@ -18,3 +23,17 @@ class Enrollment(Base):
     created_at: Mapped[date] = mapped_column(
         default=date.today
     )
+
+    #connection with course
+    course: Mapped["Course"] = relationship(
+        back_populates="enrollments"
+    )
+
+    #connection with student(user)
+    student: Mapped["User"] = relationship(
+        back_populates="enrollments"
+    )
+
+
+
+    

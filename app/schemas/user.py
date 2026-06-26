@@ -24,6 +24,10 @@ class UserRead(BaseModel):
     created_at: date
 
 class UserUpdate(BaseModel):
+    model_config = ConfigDict(
+        extra= "forbid"
+    )
+
     username: str | None = None
     full_name: str | None = None
     

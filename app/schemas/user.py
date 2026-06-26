@@ -23,11 +23,20 @@ class UserRead(BaseModel):
     role: Role
     created_at: date
 
-class UserUpdate(BaseModel):
+class UserUpdate(BaseModel): 
     model_config = ConfigDict(
-        extra= "forbid"
+        extra= "forbid" 
     )
 
     username: str | None = None
     full_name: str | None = None
     
+
+
+class TeacherShort(BaseModel):
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+    id: int
+    full_name: str

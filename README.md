@@ -1,34 +1,120 @@
 # StudyFlow
 
-Backend для платформы онлайн-обучения.
+A REST API for an online learning platform built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
 
-## Стек
+StudyFlow allows teachers to create courses and students to enroll in them.
 
-- FastAPI
-- SQLAlchemy
-- PostgreSQL
-- Alembic
-- JWT
+> 🚧 This project is currently under active development.
 
-## Возможности
+---
 
-- Регистрация
-- Авторизация
-- Создание курсов
-- Запись студентов на курс
+# Features
 
-## Структура проекта
+### Authentication
 
+* User registration
+* JWT authentication *(coming soon)*
+
+### User
+
+* View current profile
+* Update profile
+* Delete account
+
+### Course
+
+* Create course
+* Get course information
+* Search courses
+* Update course
+* Delete course
+
+### Enrollment
+
+* Enroll in a course
+* Leave a course
+* View enrolled courses
+* View students in a course
+
+---
+
+# Tech Stack
+
+* Python 3.13
+* FastAPI
+* SQLAlchemy 2.0
+* PostgreSQL
+* Alembic
+* Pydantic v2
+* JWT Authentication *(coming soon)*
+
+---
+
+# Project Structure
+
+```text
 app/
+├── api/
+├── core/
+├── crud/
 ├── models/
 ├── schemas/
-├── crud/
-├── api/
-└── core/
+├── enums/
+├── dependencies.py
+└── main.py
+```
 
-## Как запустить
+---
 
-1. git clone ...
-2. pip install -r requirements.txt
-3. alembic upgrade head
-4. uvicorn app.main:app --reload
+# Database Models
+
+* User
+* Course
+* Enrollment
+
+Relationships:
+
+* One Teacher → Many Courses
+* Many Students ↔ Many Courses (Enrollment)
+
+---
+
+# API
+
+The API design is documented in:
+
+```text
+API_PLAN.md
+```
+
+---
+
+# Current Progress
+
+* [x] Database models
+* [x] Alembic migrations
+* [x] Pydantic schemas
+* [x] CRUD operations
+* [x] Dependencies
+* [ ] API routers
+* [ ] JWT authentication
+* [ ] Role-based authorization
+* [ ] Exception handling
+* [ ] Testing
+
+---
+
+# Future Improvements
+
+* Pagination
+* Course search
+* Refresh Tokens
+* Docker
+* Unit Tests
+* CI/CD
+
+---
+
+# Author
+
+**abdurakhman**

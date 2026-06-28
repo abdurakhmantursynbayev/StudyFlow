@@ -40,3 +40,14 @@ def get_student_courses(db: Session, student_id: int) -> list[Course]:
 
     data = db.execute(stmt).scalars().all()
     return data
+
+def get_course_students(db: Session, course_id: int) -> list[User]:
+    stmt = (
+        select(User)
+        .join(Enrollment, Enrollment.student_id == User.id)
+        .where(Enrollment.course_id == course_id)
+    )
+    
+    data = db.execute(stmt).scalars().all()
+    return data
+

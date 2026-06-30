@@ -50,4 +50,9 @@ def delete_course(db: Session, course_id: int, teacher_id: int) -> bool | None:
         return True
     else:
         return False
-    
+
+def get_courses(db: Session) -> list[Course]:
+    courses = db.execute(
+        select(Course)
+    ).scalars().all()
+    return courses

@@ -3,9 +3,20 @@ from app.schemas.user import UserCreate, UserUpdate
 from app.models.user import User
 from app.core.security import hash_password
 from sqlalchemy import select
+from fastapi.exceptions import HTTPException
+from fastapi import status
 
 
 def create_user(db: Session, user: UserCreate) -> User:
+    user_in_db = db.execute(
+        select(User)
+        .where(User.username == user.username)
+    ).scalar()
+    if user_in_db is not None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists"
+        )
+
     hashed_password = hash_password(password=user.password)
 
     new_user = User(

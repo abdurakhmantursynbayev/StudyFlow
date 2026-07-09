@@ -1,4 +1,8 @@
 from pwdlib import PasswordHash
+from datetime import datetime, timedelta, timezone
+import jwt
+from app.core.config import SECRET_KEY
+from app.core.config import ALGORITHM
 
 password_hash = PasswordHash.recommended()
 
@@ -11,3 +15,16 @@ def hash_password(password: str) -> str:
 
 def password_verify(plain_password: str, hashed_password: str) -> bool:
     return password_hash.verify(plain_password, hashed_password)
+
+def create_access_token(payload: dict, expiration: timedelta | None = None):
+    payload_data = payload.copy()
+    if expiration:
+        expiration_time = datetime.now(timezone.utc) + expiration
+    else:
+        expiration_time = datetime.now(timezone.utc) + timedelta(minutes=15)
+    payload_data.update({"exp": expiration_time})
+    encode_jwt = jwt.encode(payload_data, SECRET_KEY, algorithm=[ALGORITHM])
+    return encode_jwt
+
+
+

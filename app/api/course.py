@@ -1,9 +1,30 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas.course import CourseRead, CourseCreate, CourseUpdate
+from fastapi import (
+    APIRouter, 
+    Depends, 
+    HTTPException, 
+    status
+)
+from app.schemas.course import (
+    CourseRead, 
+    CourseCreate, 
+    CourseUpdate
+)
 from app.dependencies import get_db
 from sqlalchemy.orm import Session
 from typing import Annotated
-from app.crud.course import create_course, get_courses, get_course_by_title, get_course_by_id, update_course, delete_course
+from app.crud.course import (
+    create_course,
+    get_courses, 
+    get_course_by_title, 
+    get_course_by_id, 
+    update_course, 
+    delete_course
+)
+from app.dependencies import get_current_user
+from app.models.user import User
+from app.enums.role import Role
+
+
 
 router = APIRouter(
     prefix="/courses",
@@ -11,12 +32,23 @@ router = APIRouter(
 )
 
 @router.post("/", response_model=CourseRead, status_code=201)
-def create_new_course(teacher_id: int, course_data: CourseCreate, db: Annotated[Session, Depends(get_db)]):
-    return create_course(db, teacher_id, course_data)
+def create_new_course(
+        course_data: CourseCreate,
+        current_user: Annotated[User, Depends(get_current_user)],
+        db: Annotated[Session, Depends(get_db)]
+    ):
+    if current_user.role != Role.TEACHER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Student cannot create course"
+        )
+    return create_course(db, current_user.id, course_data)
+
 
 @router.get("/", response_model=list[CourseRead])
 def get_all_courses(db: Annotated[Session, Depends(get_db)]):
     return get_courses(db)
+
 
 @router.get("/title/", response_model=list[CourseRead])
 def search_course_by_name(title: str, db: Annotated[Session, Depends(get_db)]):

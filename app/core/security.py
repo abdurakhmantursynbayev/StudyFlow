@@ -23,7 +23,7 @@ def create_access_token(payload: dict, expiration: timedelta | None = None):
     else:
         expiration_time = datetime.now(timezone.utc) + timedelta(minutes=15)
     payload_data.update({"exp": expiration_time})
-    encode_jwt = jwt.encode(payload_data, SECRET_KEY, algorithm=[ALGORITHM])
+    encode_jwt = jwt.encode(payload_data, SECRET_KEY, algorithm=ALGORITHM)
     return encode_jwt
 
 

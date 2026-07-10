@@ -39,17 +39,16 @@ def update_course(db: Session, course_id: int, update_data: CourseUpdate) -> Cou
     db.refresh(course)
     return course
 
-def delete_course(db: Session, course_id: int, teacher_id: int) -> bool | None:
+def delete_course(db: Session, course_id: int) -> bool:
     course = db.get(Course, course_id)
-    if course is None:
-        return None
 
-    if course.teacher_id == teacher_id:
-        db.delete(course)
-        db.commit()
-        return True
-    else:
+    if course is None:
         return False
+    
+    db.delete(course)
+    db.commit()
+    return True
+    
 
 def get_courses(db: Session) -> list[Course]:
     courses = db.execute(

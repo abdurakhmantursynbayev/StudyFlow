@@ -80,19 +80,26 @@ def update_course_(
     if course.teacher_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail= "Not correct course"
+            detail= "You don't have permission to update this course"
         )
     
     course = update_course(db, course_id, course_new_data)
     return course
 
+
 @router.delete("/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_course_(teacher_id: int, course_id: int, db: Annotated[Session, Depends(get_db)]):
-    ans = delete_course(db, course_id, teacher_id)
-    if ans is None: 
+def delete_course_(
+        course_id: int, 
+        current_user: Annotated[User, Depends(get_current_user)],
+        db: Annotated[Session, Depends(get_db)]
+    ):
+    course = get_course_by_id(db, course_id)
+    if course is None:
         raise HTTPException(status_code= status.HTTP_404_NOT_FOUND, detail="Course not found")
-    elif ans:
-        return 
-    else:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not teacher's course or forbidden to delete")
     
+    if course.teacher_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission to delete this course"
+        )
+    ans = delete_course(db, course_id)

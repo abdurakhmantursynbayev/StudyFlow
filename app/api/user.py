@@ -28,9 +28,9 @@ def update_current_user(
     return updated_user
 
 
-@router.delete("/{user_id}", response_model=UserRead)
+@router.delete("/", response_model=UserRead)
 def delete_current_user(
-    user_id: int,
+    current_user: Annotated[User, Depends(get_current_user)],
     db: Annotated[Session, Depends(get_db)]
 ):
-    return delete_user(db, user_id)
+    return delete_user(db, current_user.id)

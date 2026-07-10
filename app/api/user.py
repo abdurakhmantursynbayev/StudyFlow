@@ -18,9 +18,13 @@ def read_me(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user
 
 
-@router.patch("/{user_id}", response_model=UserRead)
-def update_current_user(user_id: int, user_new_data: UserUpdate, db: Annotated[Session, Depends(get_db)]):
-    updated_user = update_user(db, user_id, user_new_data)
+@router.patch("/", response_model=UserRead)
+def update_current_user(
+        current_user: Annotated[User, Depends(get_current_user)],
+        user_new_data: UserUpdate,
+        db: Annotated[Session, Depends(get_db)]
+    ):
+    updated_user = update_user(db, current_user.id, user_new_data)
     return updated_user
 
 

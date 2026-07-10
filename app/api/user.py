@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends
-from app.dependencies import get_db
+from app.dependencies import get_db, get_current_user
 from typing import Annotated
 from sqlalchemy.orm import Session
 from app.schemas.user import UserRead, UserUpdate
-from app.crud.user import get_user_by_id, update_user, delete_user
+from app.crud.user import update_user, delete_user
+from app.models.user import User
 
 
 
@@ -12,9 +13,9 @@ router = APIRouter(
     tags=["USER"]
 )
 
-@router.get("/{user_id}", response_model=UserRead)
-def get_user(user_id: int, db: Annotated[Session, Depends(get_db)]):
-    return get_user_by_id(db, user_id)
+@router.get("/", response_model=UserRead)
+def read_me(current_user: Annotated[User, Depends(get_current_user)]):
+    return current_user
 
 
 @router.patch("/{user_id}", response_model=UserRead)

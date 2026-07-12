@@ -106,3 +106,79 @@ a {
 .hero-button:hover {
     background: #e53935;
 }
+
+.auth-page {
+    min-height: calc(100vh - 72px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-card {
+    width: 400px;
+
+    background: #1d1d1d;
+
+    padding: 40px;
+
+    border-radius: 12px;
+
+    border: 1px solid #2b2b2b;
+}
+
+.auth-card h1 {
+    margin-bottom: 30px;
+
+    text-align: center;
+}
+
+.auth-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.auth-card input {
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2a2a2a;
+
+    color: white;
+
+    font-size: 16px;
+}
+
+.auth-card input:focus {
+    outline: 2px solid #c62828;
+}
+
+.auth-card button {
+    margin-top: 10px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #c62828;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.auth-card button:hover {
+    background: #e53935;
+}

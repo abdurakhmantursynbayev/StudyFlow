@@ -7,13 +7,6 @@ from app.models.user import User
 
 
 def enroll_student(db: Session, enrollment_data: EnrollmentCreate, student_id: int) -> Enrollment | None:
-    course = db.get(Course, enrollment_data.course_id)
-    if course is None:
-        return None
-
-    enrollment = db.get(Enrollment, (student_id, enrollment_data.course_id))
-    if enrollment is not None:
-        return None
     
     new_enrollment = Enrollment(
         student_id = student_id,

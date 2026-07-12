@@ -1,120 +1,289 @@
 # StudyFlow
 
-A REST API for an online learning platform built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
+StudyFlow is a backend application for an online learning platform built with **FastAPI**.
 
-StudyFlow allows teachers to create courses and students to enroll in them.
+The platform supports two roles:
 
-> 🚧 This project is currently under active development.
+- 👨‍🏫 Teacher — creates and manages courses.
+- 👨‍🎓 Student — enrolls in courses and views enrolled courses.
+
+This project was created as a portfolio project to demonstrate backend development skills using modern Python technologies.
 
 ---
 
 # Features
 
-### Authentication
+## Authentication
 
-* User registration
-* JWT authentication *(coming soon)*
+- JWT Authentication
+- OAuth2 Password Flow
+- Password hashing
+- Protected endpoints
+- Current user endpoint (`/me`)
 
-### User
+## User
 
-* View current profile
-* Update profile
-* Delete account
+- Register
+- Login
+- View profile
+- Update profile
+- Delete account
 
-### Course
+## Courses
 
-* Create course
-* Get course information
-* Search courses
-* Update course
-* Delete course
+Teacher can:
 
-### Enrollment
+- Create course
+- Update own course
+- Delete own course
 
-* Enroll in a course
-* Leave a course
-* View enrolled courses
-* View students in a course
+Everyone can:
+
+- View all courses
+- Search courses by title
+- View course details
+
+## Enrollment
+
+Student can:
+
+- Enroll in a course
+- Leave a course
+- View enrolled courses
+
+Everyone can:
+
+- View students enrolled in a course
 
 ---
 
 # Tech Stack
 
-* Python 3.13
-* FastAPI
-* SQLAlchemy 2.0
-* PostgreSQL
-* Alembic
-* Pydantic v2
-* JWT Authentication *(coming soon)*
+Backend
+
+- Python 3.13
+- FastAPI
+- SQLAlchemy ORM
+- PostgreSQL
+- Alembic
+- Pydantic v2
+
+Authentication
+
+- JWT
+- OAuth2
+- pwdlib
+
+Development
+
+- Uvicorn
+- Swagger UI
 
 ---
 
 # Project Structure
 
-```text
+```
 app/
+│
 ├── api/
-├── core/
 ├── crud/
+├── core/
 ├── models/
 ├── schemas/
 ├── enums/
 ├── dependencies.py
 └── main.py
+
+alembic/
+
+requirements.txt
+README.md
 ```
 
 ---
 
-# Database Models
+# Database
 
-* User
-* Course
-* Enrollment
+Main entities:
 
-Relationships:
+- User
+- Course
+- Enrollment
 
-* One Teacher → Many Courses
-* Many Students ↔ Many Courses (Enrollment)
-
----
-
-# API
-
-The API design is documented in:
+Relationships
 
 ```text
-API_PLAN.md
+Teacher (User)
+      1
+      │
+      │ creates
+      │
+      *
+    Course
+      1
+      │
+      │ has
+      │
+      *
+ Enrollment
+      *
+      │
+      │ belongs to
+      │
+      1
+Student (User)
 ```
 
 ---
 
-# Current Progress
+# API Endpoints
 
-* [x] Database models
-* [x] Alembic migrations
-* [x] Pydantic schemas
-* [x] CRUD operations
-* [x] Dependencies
-* [ ] API routers
-* [ ] JWT authentication
-* [ ] Role-based authorization
-* [ ] Exception handling
-* [ ] Testing
+## Authentication
+
+| Method | Endpoint |
+|---------|-----------|
+| POST | `/auth/register` |
+| POST | `/auth/login` |
+
+---
+
+## User
+
+| Method | Endpoint |
+|---------|-----------|
+| GET | `/me` |
+| PATCH | `/me` |
+| DELETE | `/me` |
+
+---
+
+## Courses
+
+| Method | Endpoint |
+|---------|-----------|
+| POST | `/courses` |
+| GET | `/courses` |
+| GET | `/courses/{id}` |
+| GET | `/courses/title` |
+| PATCH | `/courses/{id}` |
+| DELETE | `/courses/{id}` |
+
+---
+
+## Enrollment
+
+| Method | Endpoint |
+|---------|-----------|
+| POST | `/me/courses` |
+| GET | `/me/courses` |
+| DELETE | `/me/courses/{course_id}` |
+| GET | `/courses/{course_id}/students` |
+
+---
+
+# Authentication
+
+All protected endpoints require a JWT access token.
+
+```
+Authorization: Bearer <access_token>
+```
+
+---
+
+# Getting Started
+
+Clone the repository
+
+```bash
+git clone https://github.com/your_username/StudyFlow.git
+cd StudyFlow
+```
+
+Create virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate
+
+Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# Environment Variables
+
+Create `.env`
+
+```env
+DATABASE_URL=your_database_url
+SECRET_KEY=your_secret_key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+---
+
+# Run
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Swagger documentation
+
+```
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# Current Status
+
+✅ Backend completed
+
+- Authentication
+- Authorization
+- CRUD operations
+- Role permissions
+- Course enrollment
+- PostgreSQL integration
+- Swagger documentation
+
+🚧 Frontend is currently under development.
 
 ---
 
 # Future Improvements
 
-* Pagination
-* Course search
-* Refresh Tokens
-* Docker
-* Unit Tests
-* CI/CD
+- React + TypeScript frontend
+- Responsive UI
+- Docker
+- Unit tests
+- CI/CD
+- File upload
+- Course thumbnails
 
 ---
 
-# Author
+# License
 
-**abdurakhman**
+MIT License

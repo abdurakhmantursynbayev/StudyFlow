@@ -84,8 +84,13 @@ def get_course_students_(
         course_id: int, 
         db: Annotated[Session, Depends(get_db)]
     ):
+    course = get_course_by_id(db, course_id)
+    if course is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Course not found"
+        )
+    
     students = get_course_students(db, course_id)
-    if students is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
     return students
 

@@ -35,10 +35,6 @@ def get_student_courses(db: Session, student_id: int) -> list[Course]:
     return data
 
 def get_course_students(db: Session, course_id: int) -> list[User]:
-    course = db.get(Course, course_id)
-    if course is None:
-        return None
-
     stmt = (
         select(User)
         .join(Enrollment, Enrollment.student_id == User.id)

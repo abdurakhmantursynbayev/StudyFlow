@@ -15,6 +15,7 @@ router = APIRouter(
     tags=["ENROLLMENT"]
 )
 
+#==========
 @router.post(
     "/me/courses/", 
     response_model=EnrollmentRead, 
@@ -39,25 +40,50 @@ def create_enrollment(
     if enrollment is not None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Enrollment already extists"
+            detail="Enrollment already exists"
         )
     new_enrollment = enroll_student(db, enrollment_data, current_user.id)
     return new_enrollment
 
-@router.get("/me/courses", response_model=list[CourseRead])
-def get_student_courses_(student_id: int, db: Annotated[Session, Depends(get_db)]):
-    courses = get_student_courses(db, student_id)
+#==========
+@router.get(
+    "/me/courses", 
+    response_model=list[CourseRead]
+)
+def get_student_courses_(
+        current_user: Annotated[User, Depends(get_current_user)], 
+        db: Annotated[Session, Depends(get_db)]
+    ):
+    courses = get_student_courses(db, current_user.id)
     return courses
 
-@router.delete("/me/courses/{course_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_enrollment_(course_id: int, student_id: int, db: Annotated[Session, Depends(get_db)]):
-    enrollment = delete_enrollment(db, student_id, course_id)
-    if enrollment is None: 
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
-    return
+#==========
+@router.delete(
+    "/me/courses/{course_id}", 
+    status_code=status.HTTP_204_NO_CONTENT
+)
+def delete_enrollment_(
+        course_id: int, 
+        current_user: Annotated[User, Depends(get_current_user)], 
+        db: Annotated[Session, Depends(get_db)]
+    ):
+    enrollment = get_enrollment(db, current_user.id, course_id)
+    if enrollment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Enrollment not found"
+        )
+    delete_enrollment(db, current_user.id, course_id)
 
-@router.get("/courses/{course_id}/students", response_model=list[StudentShort])
-def get_course_students_(course_id: int, db: Annotated[Session, Depends(get_db)]):
+#==========
+@router.get(
+    "/courses/{course_id}/students", 
+    response_model=list[StudentShort]
+)
+def get_course_students_(
+        course_id: int, 
+        db: Annotated[Session, Depends(get_db)]
+    ):
     students = get_course_students(db, course_id)
     if students is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")

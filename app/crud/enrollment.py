@@ -50,9 +50,6 @@ def get_course_students(db: Session, course_id: int) -> list[User]:
 
 def delete_enrollment(db: Session, student_id: int, course_id: int) -> Enrollment | None:
     enrollment = db.get(Enrollment, (student_id, course_id))
-    if enrollment is None:
-        return None
     db.delete(enrollment)
     db.commit()
     
-    return enrollment

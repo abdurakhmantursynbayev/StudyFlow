@@ -10,7 +10,7 @@ from app.models.user import User
 from app.dependencies import get_current_user
 from app.crud.course import get_course_by_id
 from app.enums.role import Role
-
+ 
 router = APIRouter(
     tags=["ENROLLMENT"]
 )

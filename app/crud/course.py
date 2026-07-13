@@ -55,3 +55,9 @@ def get_courses(db: Session) -> list[Course]:
         select(Course)
     ).scalars().all()
     return courses
+
+def get_teacher_courses(db: Session, teacher_id: int) -> list[Course]:
+    courses = db.execute(
+        select(Course).where(Course.teacher_id == teacher_id)
+    ).scalars().all()
+    return courses

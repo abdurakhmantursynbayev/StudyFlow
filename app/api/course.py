@@ -18,12 +18,12 @@ from app.crud.course import (
     get_course_by_title, 
     get_course_by_id, 
     update_course, 
-    delete_course
+    delete_course,
+    get_teacher_courses
 )
 from app.dependencies import get_current_user
 from app.models.user import User
 from app.enums.role import Role
-
 
 
 router = APIRouter(
@@ -103,3 +103,15 @@ def delete_course_(
             detail="You don't have permission to delete this course"
         )
     ans = delete_course(db, course_id)
+
+@router.get("/my", response_model=list[CourseRead])
+def get_my_created_courses(
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)]
+):
+    if current_user.role != Role.TEACHER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only teachers can view their created courses"
+        )
+    return get_teacher_courses(db, current_user.id)

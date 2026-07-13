@@ -54,12 +54,26 @@ def get_all_courses(db: Annotated[Session, Depends(get_db)]):
 def search_course_by_name(title: str, db: Annotated[Session, Depends(get_db)]):
     return get_course_by_title(db, title)
 
+@router.get("/my", response_model=list[CourseRead])
+def get_my_created_courses(
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Annotated[Session, Depends(get_db)]
+):
+    if current_user.role != Role.TEACHER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only teachers can view their created courses"
+        )
+    return get_teacher_courses(db, current_user.id)
+
 @router.get("/{course_id}", response_model=CourseRead)
 def search_course_by_id(course_id: int, db: Annotated[Session, Depends(get_db)]):
     course =  get_course_by_id(db, course_id)
     if course is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
     return course
+
+
 
 @router.patch("/{course_id}", response_model=CourseRead)
 def update_course_(
@@ -103,15 +117,3 @@ def delete_course_(
             detail="You don't have permission to delete this course"
         )
     ans = delete_course(db, course_id)
-
-@router.get("/my", response_model=list[CourseRead])
-def get_my_created_courses(
-    current_user: Annotated[User, Depends(get_current_user)],
-    db: Annotated[Session, Depends(get_db)]
-):
-    if current_user.role != Role.TEACHER:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only teachers can view their created courses"
-        )
-    return get_teacher_courses(db, current_user.id)
